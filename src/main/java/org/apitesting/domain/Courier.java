@@ -1,4 +1,4 @@
-package org.apitesting;
+package org.apitesting.domain;
 
 public class Courier {
     private String login;

@@ -1,4 +1,4 @@
-package org.apitesting;
+package org.apitesting.domain;
 
 public class Order {
     private String firstName;

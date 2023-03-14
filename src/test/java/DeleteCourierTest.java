@@ -1,44 +1,28 @@
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import org.apitesting.Courier;
-import org.apitesting.Credential;
+import org.apitesting.api.CourierApi;
+import org.apitesting.domain.Credential;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class DeleteCourierTest {
-    private static Credential credential;
-    private Courier courier;
+    private CourierApi courierApi;
 
     @Before
     public void setUp() {
+        courierApi = new CourierApi();
+        courierApi.setCredential(new Credential("courier12345678", "12345678"));
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
-        credential = new Credential("courier12345678", "12345678");
-        courier = new Courier(credential.getLogin(), credential.getPassword(), "Alexey");
-    }
-
-    public void createNewCourier() {
-        given()
-                .header("Content-type", "application/json")
-                .and()
-                .body(courier)
-                .when()
-                .post("/api/v1/courier");
     }
 
     @Test
     @DisplayName("Check deleting courier")
     public void deleteCourierSuccessfully() {
-        createNewCourier();
+        courierApi.createNewCourier();
 
-        Integer courierId = given().header("Content-type", "application/json").and().body(credential).when().post("/api/v1/courier/login")
-                .then().extract().body().path("id");
-
-        given()
-                .header("Content-type", "application/json")
-                .delete(String.format("/api/v1/courier/%d", courierId))
+        courierApi.deleteCourier()
                 .then()
                 .assertThat().body("ok", is(true))
                 .and()
@@ -48,10 +32,7 @@ public class DeleteCourierTest {
     @Test
     @DisplayName("Check deleting courier without id error")
     public void deleteCourierWithoutIdError() {
-        given()
-                .header("Content-type", "application/json")
-                .and().body("{\"id\":}").when()
-                .delete("/api/v1/courier/:id")
+        courierApi.deleteCourierWithId("")
                 .then()
                 .assertThat().body("message", notNullValue())
                 .and()
@@ -61,11 +42,10 @@ public class DeleteCourierTest {
     @Test
     @DisplayName("Check deleting courier with invalid id error")
     public void deleteCourierWithInvalidId() {
-        given()
-                .header("Content-type", "application/json")
-                .delete(String.format("/api/v1/courier/%d", -1))
+        courierApi.deleteCourierWithId("-1")
                 .then()
-                .assertThat().body("message", containsString("Курьера с таким id нет"))
+                .assertThat()
+                .body("message", containsString("Курьера с таким id нет"))
                 .and()
                 .statusCode(404);
     }

@@ -3,9 +3,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apitesting.Courier;
-import org.apitesting.Credential;
-import org.apitesting.Order;
+import org.apitesting.domain.Courier;
+import org.apitesting.domain.Credential;
+import org.apitesting.domain.Order;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,33 +1,30 @@
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.apitesting.Credential;
+import org.apitesting.api.CourierApi;
+import org.apitesting.domain.Credential;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class LoginCourierTest {
+    private CourierApi courierApi;
+
     @Before
     public void setUp() {
+        courierApi = new CourierApi();
+        courierApi.setCredential(new Credential("ninja12523423dqdqdqdqdqdqdqdqdqdqdqt32", "123t32t3t"));
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
     @Test
     @DisplayName("Check login with credentials")
     public void loginCourierSuccessfully() {
-        Credential credential = new Credential("ninja12523423dqdqdqdqdqdqdqdqdqdqdqt32", "123t32t3t");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .and()
-                        .body(credential)
-                        .when()
-                        .post("/api/v1/courier/login");
-
-        response.then().assertThat().body("id", notNullValue())
+        courierApi.loginCourier()
+                .then()
+                .assertThat()
+                .body("id", notNullValue())
                 .and()
                 .statusCode(200);
     }
@@ -35,16 +32,11 @@ public class LoginCourierTest {
     @Test
     @DisplayName("Check login without password")
     public void loginCourierWithoutAllRequiredFieldsFails() {
-        Credential credential = new Credential("ninja12523423dqdqdqdqdqdqdqdqdqdqdqt32", "");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .and()
-                        .body(credential)
-                        .when()
-                        .post("/api/v1/courier/login");
-
-        response.then().assertThat().body("message", containsString("Недостаточно данных для входа"))
+        courierApi.setCredential(new Credential("ninja12523423dqdqdqdqdqdqdqdqdqdqdqt32", ""));
+        courierApi.loginCourier()
+                .then()
+                .assertThat()
+                .body("message", containsString("Недостаточно данных для входа"))
                 .and()
                 .statusCode(400);
     }
@@ -52,16 +44,11 @@ public class LoginCourierTest {
     @Test
     @DisplayName("Check login with invalid credentials")
     public void loginCourierWithInvalidCredentialsFails() {
-        Credential credential = new Credential("notFoundLogin", "notFoundPassword");
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .and()
-                        .body(credential)
-                        .when()
-                        .post("/api/v1/courier/login");
-
-        response.then().assertThat().body("message", containsString("Учетная запись не найдена"))
+        courierApi.setCredential(new Credential("notFoundLogin", "notFoundPassword"));
+        courierApi.loginCourier()
+                .then()
+                .assertThat()
+                .body("message", containsString("Учетная запись не найдена"))
                 .and()
                 .statusCode(404);
     }
