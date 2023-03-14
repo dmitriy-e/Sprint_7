@@ -1,8 +1,8 @@
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.example.Courier;
-import org.example.Credential;
+import org.apitesting.Courier;
+import org.apitesting.Credential;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
