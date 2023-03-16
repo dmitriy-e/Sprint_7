@@ -1,7 +1,7 @@
 # Проект 7 спринта
 
 Покрытие тестами API учебного сервиса Яндекс.Самокат.  
-Документация API : [qa-scooter.praktikum-services.ru](qa-scooter.praktikum-services.ru/docs/)
+Документация API : [qa-scooter.praktikum-services.ru/docs/](https://qa-scooter.praktikum-services.ru/docs/)
 
 ## Используемые фреймворки
 
