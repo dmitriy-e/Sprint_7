@@ -1,10 +1,10 @@
 import io.qameta.allure.junit4.DisplayName;
-import io.restassured.RestAssured;
 import org.apitesting.api.CourierApi;
 import org.apitesting.domain.Credential;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -15,7 +15,6 @@ public class LoginCourierTest {
     public void setUp() {
         courierApi = new CourierApi();
         courierApi.setCredential(new Credential("ninja12523423dqdqdqdqdqdqdqdqdqdqdqt32", "123t32t3t"));
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
     @Test
@@ -26,7 +25,7 @@ public class LoginCourierTest {
                 .assertThat()
                 .body("id", notNullValue())
                 .and()
-                .statusCode(200);
+                .statusCode(SC_OK);
     }
 
     @Test
@@ -38,7 +37,7 @@ public class LoginCourierTest {
                 .assertThat()
                 .body("message", containsString("Недостаточно данных для входа"))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
     @Test
@@ -50,7 +49,7 @@ public class LoginCourierTest {
                 .assertThat()
                 .body("message", containsString("Учетная запись не найдена"))
                 .and()
-                .statusCode(404);
+                .statusCode(SC_NOT_FOUND);
     }
 }
 
