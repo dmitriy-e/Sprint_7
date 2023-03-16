@@ -5,9 +5,10 @@ import org.apitesting.domain.Courier;
 import org.apitesting.domain.Credential;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.apitesting.routes.CourierRoutes.BASIC_ROUTE;
+import static org.apitesting.routes.CourierRoutes.LOGIN_ROUTE;
 
-public class CourierApi {
+public class CourierApi extends BaseApi {
     private Credential credential;
 
     public Response createNewCourier() {
@@ -17,7 +18,7 @@ public class CourierApi {
                 .and()
                 .body(courier)
                 .when()
-                .post("/api/v1/courier");
+                .post(BASIC_ROUTE);
     }
 
     public Response loginCourier() {
@@ -26,7 +27,7 @@ public class CourierApi {
                 .and()
                 .body(credential)
                 .when()
-                .post("/api/v1/courier/login");
+                .post(LOGIN_ROUTE);
     }
 
     public Response deleteCourier() {
@@ -38,7 +39,7 @@ public class CourierApi {
                     .header("Content-type", "application/json")
                     .and()
                     .when()
-                    .delete(String.format("/api/v1/courier/%d", courierId));
+                    .delete(String.format(String.join(BASIC_ROUTE, "", "/%d"), courierId));
         }
         return null;
     }
@@ -48,7 +49,7 @@ public class CourierApi {
                 .header("Content-type", "application/json")
                 .and()
                 .body(String.format("{\"id\": %s}", courierId))
-                .delete(String.format("/api/v1/courier/%s", courierId));
+                .delete(String.format(String.join(BASIC_ROUTE, "", "/%s"), courierId));
     }
 
     public void setCredential(Credential credential) {
